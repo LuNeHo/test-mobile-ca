@@ -1,0 +1,5 @@
+<resources>
+    <string name="screen_title">Mes Comptes</string>
+    <string name="main_bank_title">Credit Agricole</string>
+    <string name="other_bank_title">Autres Banques</string>
+</resources>
