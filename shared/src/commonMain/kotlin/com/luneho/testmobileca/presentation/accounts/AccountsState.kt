@@ -1,0 +1,20 @@
+package com.luneho.testmobileca.presentation.accounts
+
+import com.luneho.testmobileca.domain.model.Bank
+import com.luneho.testmobileca.presentation.UiEffect
+import com.luneho.testmobileca.presentation.UiIntent
+import com.luneho.testmobileca.presentation.UiState
+
+data class AccountsState(
+    val isLoading: Boolean = false,
+    val caBanks: List<Bank> = emptyList(),
+    val otherBanks: List<Bank> = emptyList(),
+    val error: String? = null
+) : UiState
+
+sealed interface AccountsEvent : UiIntent {
+    data object LoadBanks : AccountsEvent
+}
+
+sealed interface AccountsEffect : UiEffect {
+}
