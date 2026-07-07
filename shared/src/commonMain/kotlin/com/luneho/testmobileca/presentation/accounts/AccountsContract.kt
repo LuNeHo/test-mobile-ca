@@ -12,8 +12,8 @@ data class AccountsState(
     val error: String? = null
 ) : UiState
 
-sealed interface AccountsEvent : UiIntent {
-    data object LoadBanks : AccountsEvent
+sealed interface AccountsIntent : UiIntent {
+    data object LoadBanks : AccountsIntent
 }
 
 sealed interface AccountsEffect : UiEffect {

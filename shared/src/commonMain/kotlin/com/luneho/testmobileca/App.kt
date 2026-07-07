@@ -8,7 +8,5 @@ import com.luneho.testmobileca.presentation.accounts.AccountsScreen
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
-        AccountsScreen()
-    }
+    MaterialTheme { AccountsScreen() }
 }

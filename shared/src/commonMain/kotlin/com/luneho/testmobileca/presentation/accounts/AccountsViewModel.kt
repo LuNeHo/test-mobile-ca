@@ -6,15 +6,15 @@ import com.luneho.testmobileca.presentation.BaseViewModel
 import kotlinx.coroutines.launch
 
 class AccountsViewModel(private val getSortedBanks: GetSortedBanksUseCase) :
-    BaseViewModel<AccountsState, AccountsEvent, AccountsEffect>(AccountsState()) {
+    BaseViewModel<AccountsState, AccountsIntent, AccountsEffect>(AccountsState()) {
 
     init {
-        handleIntent(AccountsEvent.LoadBanks)
+        handleIntent(AccountsIntent.LoadBanks)
     }
 
-    override fun handleIntent(event: AccountsEvent) {
+    override fun handleIntent(event: AccountsIntent) {
         when (event) {
-            AccountsEvent.LoadBanks -> loadBanks()
+            AccountsIntent.LoadBanks -> loadBanks()
         }
     }
     private fun loadBanks() {
@@ -33,7 +33,6 @@ class AccountsViewModel(private val getSortedBanks: GetSortedBanksUseCase) :
                 .onFailure { e ->
                     updateState { copy(isLoading = false, error = e.message) }
                 }
-            updateState { copy(isLoading = false) }
         }
     }
 }
