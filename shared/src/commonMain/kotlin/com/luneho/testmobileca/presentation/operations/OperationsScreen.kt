@@ -2,6 +2,7 @@ package com.luneho.testmobileca.presentation.operations
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -9,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.HorizontalDivider
@@ -30,7 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.luneho.testmobileca.domain.model.Operation
-import com.luneho.testmobileca.domain.usecase.GetSortedOperationsUseCase
 import com.luneho.testmobileca.presentation.utils.formatAsMoney
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
@@ -60,7 +60,10 @@ private fun OperationsContent(padding: PaddingValues, state: OperationsState) {
             .padding(padding)
     ) {
         when {
-            state.operations.isEmpty() -> Text("No operations found.")
+            state.operations.isEmpty() -> Box(Modifier.fillMaxSize(), Alignment.Center) {
+                Text("No operations found.")
+            }
+
             else -> {
                 val totalAmount = state.operations.sumOf { abs(it.amount) }
                 Text(
@@ -77,7 +80,7 @@ private fun OperationsContent(padding: PaddingValues, state: OperationsState) {
                         .fillMaxSize()
                         .background(Color.White),
                 ) {
-                    items(state.operations, key = { it.id }) { operation ->
+                    itemsIndexed(state.operations, key = { index, operation -> "${operation.id}_$index" }) { _, operation ->
                         OperationRow(operation)
                     }
                 }
@@ -140,14 +143,9 @@ fun OperationsScreenPreview() {
         Operation("2", "Prélèvement Netflix", -15.99, 1644870724),
         Operation("4", "CB Amazon", -95.99, 1644611558)
     )
+    val state = OperationsState(accountLabel, operations)
 
     MaterialTheme {
-        OperationsScreen(
-            viewModel = OperationsViewModel(
-                accountLabel,
-                operations,
-                GetSortedOperationsUseCase()
-            )
-        ) {}
+        OperationsContent(PaddingValues(), state)
     }
 }
