@@ -1,5 +1,6 @@
-package com.luneho.testmobileca.domain
+package com.luneho.testmobileca.domain.usecase
 
+import com.luneho.testmobileca.domain.BankRepository
 import com.luneho.testmobileca.domain.model.Bank
 
 class GetSortedBanksUseCase(private val repository: BankRepository) {

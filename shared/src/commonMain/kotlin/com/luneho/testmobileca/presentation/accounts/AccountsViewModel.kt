@@ -1,7 +1,7 @@
 package com.luneho.testmobileca.presentation.accounts
 
 import androidx.lifecycle.viewModelScope
-import com.luneho.testmobileca.domain.GetSortedBanksUseCase
+import com.luneho.testmobileca.domain.usecase.GetSortedBanksUseCase
 import com.luneho.testmobileca.presentation.BaseViewModel
 import kotlinx.coroutines.launch
 
