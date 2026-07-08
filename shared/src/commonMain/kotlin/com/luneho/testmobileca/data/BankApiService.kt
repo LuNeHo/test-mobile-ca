@@ -1,11 +1,8 @@
 package com.luneho.testmobileca.data
 
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.get
+import de.jensklingenberg.ktorfit.http.GET
 
-class BankApiService(private val client: HttpClient) {
-
-    suspend fun getBanks(): List<BankDto> =
-        client.get("banks.json").body()
+interface BankApiService {
+    @GET("banks.json")
+    suspend fun getBanks(): List<BankDto>
 }

@@ -1,20 +1,22 @@
 package com.luneho.testmobileca.presentation.accounts
 
 import androidx.lifecycle.viewModelScope
-import com.luneho.testmobileca.domain.GetSortedBanksUseCase
+import com.luneho.testmobileca.domain.usecase.GetSortedBanksUseCase
 import com.luneho.testmobileca.presentation.BaseViewModel
+import com.luneho.testmobileca.presentation.accounts.AccountsEffect.NavigateToOperations
 import kotlinx.coroutines.launch
 
 class AccountsViewModel(private val getSortedBanks: GetSortedBanksUseCase) :
-    BaseViewModel<AccountsState, AccountsEvent, AccountsEffect>(AccountsState()) {
+    BaseViewModel<AccountsState, AccountsIntent, AccountsEffect>(AccountsState()) {
 
     init {
-        handleIntent(AccountsEvent.LoadBanks)
+        handleIntent(AccountsIntent.LoadBanks)
     }
 
-    override fun handleIntent(event: AccountsEvent) {
+    override fun handleIntent(event: AccountsIntent) {
         when (event) {
-            AccountsEvent.LoadBanks -> loadBanks()
+            AccountsIntent.LoadBanks -> loadBanks()
+            is AccountsIntent.SelectAccount -> sendEffect(NavigateToOperations(event.account))
         }
     }
     private fun loadBanks() {
@@ -33,7 +35,6 @@ class AccountsViewModel(private val getSortedBanks: GetSortedBanksUseCase) :
                 .onFailure { e ->
                     updateState { copy(isLoading = false, error = e.message) }
                 }
-            updateState { copy(isLoading = false) }
         }
     }
 }
