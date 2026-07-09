@@ -1,49 +1,86 @@
 package com.luneho.testmobileca
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.luneho.testmobileca.domain.model.Operation
-import com.luneho.testmobileca.domain.usecase.GetSortedOperationsUseCase
 import com.luneho.testmobileca.presentation.accounts.AccountsScreen
 import com.luneho.testmobileca.presentation.operations.OperationsScreen
-import com.luneho.testmobileca.presentation.operations.OperationsViewModel
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import org.koin.compose.koinInject
+
+private val json = Json { ignoreUnknownKeys = true }
 
 @Composable
 fun App() {
     val navController = rememberNavController()
-    val json = Json { ignoreUnknownKeys = true }
+    var selectedItem by remember { mutableIntStateOf(0) }
 
     MaterialTheme {
-        NavHost(navController, Screen.Accounts) {
-            composable<Screen.Accounts> {
-                AccountsScreen(onNavigateToOperations = { account ->
-                    navController.navigate(
-                        Screen.Operations(
-                            account.label,
-                            json.encodeToString(account.operations)
-                        )
+        Scaffold(
+            bottomBar = {
+                NavigationBar {
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.Star, contentDescription = null) },
+                        label = { Text("Mes Comptes") },
+                        selected = selectedItem == 0,
+                        onClick = { selectedItem = 0 }
                     )
-                })
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.Star, contentDescription = null) },
+                        label = { Text("Simulation") },
+                        selected = selectedItem == 1,
+                        onClick = { selectedItem = 1 }
+                    )
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.Star, contentDescription = null) },
+                        label = { Text("À vous de jouer") },
+                        selected = selectedItem == 2,
+                        onClick = { selectedItem = 2 }
+                    )
+                }
             }
-            composable<Screen.Operations> { backStackEntry ->
-                val screen: Screen.Operations = backStackEntry.toRoute()
-                val operations = json.decodeFromString<List<Operation>>(screen.operationsJson)
-                val getSortedOperations = koinInject<GetSortedOperationsUseCase>()
+        ) { padding ->
+            NavHost(
+                navController = navController,
+                startDestination = Screen.Accounts,
+                modifier = Modifier.padding(padding)
+            ) {
+                composable<Screen.Accounts> {
+                    AccountsScreen(onNavigateToOperations = { account ->
+                        navController.navigate(
+                            Screen.Operations(
+                                account.label,
+                                json.encodeToString(account.operations)
+                            )
+                        )
+                    })
+                }
+                composable<Screen.Operations> { backStackEntry ->
+                    val screen: Screen.Operations = backStackEntry.toRoute()
+                    val operations = json.decodeFromString<List<Operation>>(screen.operationsJson)
 
-                OperationsScreen(
-                    viewModel = OperationsViewModel(
+                    OperationsScreen(
                         accountLabel = screen.accountLabel,
                         operations = operations,
-                        getSortedOperations = getSortedOperations
-                    )
-                ) { navController.popBackStack() }
+                    ) { navController.popBackStack() }
+                }
             }
         }
     }

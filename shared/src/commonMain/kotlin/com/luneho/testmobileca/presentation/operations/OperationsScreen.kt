@@ -36,12 +36,20 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 import kotlin.math.abs
 import kotlin.time.Instant
 
 
 @Composable
-fun OperationsScreen(viewModel: OperationsViewModel = koinViewModel(), onBack: () -> Unit) {
+fun OperationsScreen(
+    accountLabel: String,
+    operations: List<Operation>,
+    viewModel: OperationsViewModel = koinViewModel(
+        parameters = { parametersOf(operations, accountLabel) }
+    ),
+    onBack: () -> Unit
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold(
@@ -80,7 +88,9 @@ private fun OperationsContent(padding: PaddingValues, state: OperationsState) {
                         .fillMaxSize()
                         .background(Color.White),
                 ) {
-                    itemsIndexed(state.operations, key = { index, operation -> "${operation.id}_$index" }) { _, operation ->
+                    itemsIndexed(
+                        state.operations,
+                        key = { index, operation -> "${operation.id}_$index" }) { _, operation ->
                         OperationRow(operation)
                     }
                 }
