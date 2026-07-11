@@ -67,6 +67,7 @@ fun App() {
                         navController.navigate(
                             Screen.Operations(
                                 account.label,
+                                account.balance,
                                 json.encodeToString(account.operations)
                             )
                         )
@@ -78,6 +79,7 @@ fun App() {
 
                     OperationsScreen(
                         accountLabel = screen.accountLabel,
+                        accountBalance = screen.accountBalance,
                         operations = operations,
                     ) { navController.popBackStack() }
                 }
@@ -94,5 +96,9 @@ sealed class Screen {
     data object Accounts : Screen()
 
     @Serializable
-    data class Operations(val accountLabel: String, val operationsJson: String) : Screen()
+    data class Operations(
+        val accountLabel: String,
+        val accountBalance: Double,
+        val operationsJson: String
+    ) : Screen()
 }

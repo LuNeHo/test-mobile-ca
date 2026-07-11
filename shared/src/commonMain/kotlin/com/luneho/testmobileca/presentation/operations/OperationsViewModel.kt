@@ -6,10 +6,11 @@ import com.luneho.testmobileca.presentation.BaseViewModel
 
 class OperationsViewModel(
     accountLabel: String,
+    accountBalance: Double,
     operations: List<Operation>,
     getSortedOperations: GetSortedOperationsUseCase
 ) : BaseViewModel<OperationsState, OperationsIntent, OperationsEffect>(
-    OperationsState(accountLabel, getSortedOperations(operations))
+    OperationsState(accountLabel, accountBalance, getSortedOperations(operations))
 ) {
     override fun handleIntent(event: OperationsIntent) {}
 }

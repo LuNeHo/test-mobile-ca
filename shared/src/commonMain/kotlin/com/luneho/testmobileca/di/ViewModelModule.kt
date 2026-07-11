@@ -14,10 +14,12 @@ val viewModelModule = module {
     }
     viewModel { params ->
         val accountLabel = params.get<String>()
+        val accountBalance = params.get<Double>()
         val operations = params.get<List<Operation>>()
 
         OperationsViewModel(
             accountLabel = accountLabel,
+            accountBalance = accountBalance,
             operations = operations,
             getSortedOperations = get(),
         )

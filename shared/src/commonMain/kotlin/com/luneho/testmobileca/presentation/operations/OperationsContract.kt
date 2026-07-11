@@ -7,6 +7,7 @@ import com.luneho.testmobileca.presentation.UiState
 
 data class OperationsState(
     val accountLabel: String = "",
+    val accountBalance: Double = 0.0,
     val operations: List<Operation> = emptyList()
 ) : UiState
 
