@@ -44,9 +44,10 @@ import kotlin.time.Instant
 @Composable
 fun OperationsScreen(
     accountLabel: String,
+    accountBalance: Double,
     operations: List<Operation>,
     viewModel: OperationsViewModel = koinViewModel(
-        parameters = { parametersOf(operations, accountLabel) }
+        parameters = { parametersOf(operations, accountBalance, accountLabel) }
     ),
     onBack: () -> Unit
 ) {
@@ -75,7 +76,7 @@ private fun OperationsContent(padding: PaddingValues, state: OperationsState) {
             else -> {
                 val totalAmount = state.operations.sumOf { abs(it.amount) }
                 Text(
-                    text = totalAmount.formatAsMoney(),
+                    text = state.accountBalance.formatAsMoney(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 42.dp),
@@ -149,11 +150,12 @@ private fun Long.formatAsDate(): String {
 @Composable
 fun OperationsScreenPreview() {
     val accountLabel = "Compte de dépôt"
+    val accountBalance = 1234.09
     val operations = listOf(
         Operation("2", "Prélèvement Netflix", -15.99, 1644870724),
         Operation("4", "CB Amazon", -95.99, 1644611558)
     )
-    val state = OperationsState(accountLabel, operations)
+    val state = OperationsState(accountLabel, accountBalance, operations)
 
     MaterialTheme {
         OperationsContent(PaddingValues(), state)
